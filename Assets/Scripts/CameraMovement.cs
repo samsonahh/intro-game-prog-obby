@@ -43,7 +43,7 @@ public class CameraMovement : MonoBehaviour
     {
         Vector3 newAnchorPosition = new Vector3(player.transform.position.x, player.transform.position.y + anchorHeight, player.transform.position.z);
 
-        transform.position = Vector3.Lerp(transform.position, newAnchorPosition, playerFollowSpeed * Time.fixedDeltaTime);
+        transform.position = Vector3.Lerp(transform.position, newAnchorPosition, playerFollowSpeed * Time.deltaTime);
 
         mainCamera.transform.localPosition = new Vector3(0, 0, -Mathf.Abs(distanceFromPlayer));
     }

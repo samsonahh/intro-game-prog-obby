@@ -10,7 +10,7 @@ public class PlayerAnimationController : MonoBehaviour
     private void Start()
     {
         playerManager = GetComponent<PlayerManager>();
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     private void Update()
@@ -21,5 +21,8 @@ public class PlayerAnimationController : MonoBehaviour
     private void SetAnimatorParameters()
     {
         animator.SetFloat("PlayerSpeed", playerManager.currentPlayerSpeed);
+        animator.SetBool("isGrounded", playerManager.isGrounded);
+        animator.SetBool("isJumping", playerManager.isJumping);
+        animator.SetBool("isFalling", playerManager.isFalling);
     }
 }

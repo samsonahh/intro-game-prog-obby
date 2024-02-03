@@ -5,11 +5,19 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     public bool isMoving;
+    public bool isGrounded;
+    public bool isJumping;
+    public bool isFalling;
     public float currentPlayerSpeed;
 
     [Header("Configurable")]
-    [SerializeField] private float walkSpeed;
-    [SerializeField] private float sprintSpeed;
+    [SerializeField] private float walkSpeed = 2f;
+    [SerializeField] private float sprintSpeed = 4f;
+
+    private void Start()
+    {
+     
+    }
 
     void Update()
     {
@@ -24,13 +32,16 @@ public class PlayerManager : MonoBehaviour
             return;
         }
 
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (isGrounded)
         {
-            currentPlayerSpeed = Mathf.Lerp(currentPlayerSpeed, sprintSpeed, 10f * Time.deltaTime);
-        }
-        else
-        {
-            currentPlayerSpeed = Mathf.Lerp(currentPlayerSpeed, walkSpeed, 10f * Time.deltaTime);
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                currentPlayerSpeed = Mathf.Lerp(currentPlayerSpeed, sprintSpeed, 5f * Time.deltaTime);
+            }
+            else
+            {
+                currentPlayerSpeed = Mathf.Lerp(currentPlayerSpeed, walkSpeed, 10f * Time.deltaTime);
+            }
         }
     }
 }

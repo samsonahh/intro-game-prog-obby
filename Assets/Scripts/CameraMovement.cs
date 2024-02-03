@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    private Movement player;
+    private GameObject player;
     [SerializeField] private Transform cameraPitchTransform;
+    [SerializeField] private Camera mainCamera;
 
     [SerializeField] private bool isMouseLocked;
+    [SerializeField] private float anchorHeight;
+    [SerializeField] private float distanceFromPlayer;
     [SerializeField] private float playerFollowSpeed;
     [SerializeField] private float rotationSmoothSpeed;
+    [SerializeField] private float maxPitch;
+    [SerializeField] private float minPitch;
 
     [Header("Sensitivity")]
     [SerializeField] private float mouseSensitivity;
@@ -19,7 +24,7 @@ public class CameraMovement : MonoBehaviour
 
     private void Start()
     {
-        player = GameObject.Find("Player").GetComponent<Movement>();
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     private void Update()
@@ -31,7 +36,16 @@ public class CameraMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.position = Vector3.Lerp(transform.position, player.transform.position, playerFollowSpeed * Time.fixedDeltaTime);
+        HandleCameraFollow();
+    }
+
+    private void HandleCameraFollow()
+    {
+        Vector3 newAnchorPosition = new Vector3(player.transform.position.x, player.transform.position.y + anchorHeight, player.transform.position.z);
+
+        transform.position = Vector3.Lerp(transform.position, newAnchorPosition, playerFollowSpeed * Time.fixedDeltaTime);
+
+        mainCamera.transform.localPosition = new Vector3(0, 0, -Mathf.Abs(distanceFromPlayer));
     }
 
     private void HandleCameraMouseMovement()
@@ -41,6 +55,8 @@ public class CameraMovement : MonoBehaviour
 
         yaw += x * mouseSensitivity;
         pitch -= y * mouseSensitivity;
+
+        pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
 
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, yaw, 0), rotationSmoothSpeed * Time.deltaTime);
         cameraPitchTransform.localRotation = Quaternion.Slerp(cameraPitchTransform.localRotation, Quaternion.Euler(pitch, 0, 0), rotationSmoothSpeed * Time.deltaTime);

@@ -568,7 +568,7 @@ MonoBehaviour:
   cameraPitchTransform: {fileID: 1661390859}
   isMouseLocked: 1
   playerFollowSpeed: 10
-  rotationSmoothSpeed: 10
+  rotationSmoothSpeed: 50
   mouseSensitivity: 1.5
 --- !u!1 &1373859754
 GameObject:

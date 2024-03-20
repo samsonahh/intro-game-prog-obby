@@ -4,8 +4,15 @@ using UnityEngine;
 
 public class PlayerAnimationController : MonoBehaviour
 {
+    public static PlayerAnimationController Instance;
+
     private PlayerManager playerManager;
     private Animator animator;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -24,5 +31,10 @@ public class PlayerAnimationController : MonoBehaviour
         animator.SetBool("isGrounded", playerManager.isGrounded);
         animator.SetBool("isJumping", playerManager.isJumping);
         animator.SetBool("isFalling", playerManager.isFalling);
+    }
+
+    public void PlayDieAnimation()
+    {
+        animator.Play("Die");
     }
 }

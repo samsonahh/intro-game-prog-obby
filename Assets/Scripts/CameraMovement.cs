@@ -25,6 +25,11 @@ public class CameraMovement : MonoBehaviour
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+
+        Vector3 newAnchorPosition = new Vector3(player.transform.position.x, player.transform.position.y + anchorHeight, player.transform.position.z);
+        transform.position = newAnchorPosition;
+
+        mainCamera.transform.localPosition = new Vector3(0, 0, -Mathf.Abs(distanceFromPlayer));
     }
 
     private void Update()

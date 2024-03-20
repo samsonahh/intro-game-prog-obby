@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rigidBody;
     private CapsuleCollider capsuleCollider;
 
+    [SerializeField] private float playerFallYVelocityThreshold = -1;
     [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] private float jumpForce = 5f;
 
@@ -30,6 +31,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandlePlayerMovement()
     {
+        if (playerManager.isDying) return;
+ 
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
 
@@ -75,7 +78,7 @@ public class PlayerMovement : MonoBehaviour
             playerManager.isJumping = true;
         }
 
-        if (rigidBody.velocity.y < 0)
+        if (rigidBody.velocity.y < playerFallYVelocityThreshold)
         {
             playerManager.isFalling = true;
         }

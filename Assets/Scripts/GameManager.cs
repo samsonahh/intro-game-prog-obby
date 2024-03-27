@@ -14,6 +14,11 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        Respawn();
+    }
+
     public void Respawn()
     {
         PlayerManager.Instance.transform.position = spawnLocations[Level].position;

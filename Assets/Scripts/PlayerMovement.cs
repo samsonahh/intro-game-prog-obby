@@ -1,21 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
     private PlayerManager playerManager;
-    private Rigidbody rigidBody;
+    [HideInInspector] public Rigidbody RigidBody;
     private CapsuleCollider capsuleCollider;
 
     [SerializeField] private float playerFallYVelocityThreshold = -1;
     [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] private float jumpForce = 5f;
 
+    public LayerMask layerMask;
     void Start()
     {
         playerManager = GetComponent<PlayerManager>();
-        rigidBody = GetComponent<Rigidbody>();
+        RigidBody = GetComponent<Rigidbody>();
         capsuleCollider = GetComponent<CapsuleCollider>();
     }
 
@@ -57,28 +59,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckGrounded()
     {
-        bool middle = Physics.Raycast(transform.position + 0.025f * Vector3.up, Vector3.down, 0.05f);
+        bool m = Physics.Raycast(transform.position + 0.025f * Vector3.up, Vector3.down, 0.05f);
 
         bool lt = Physics.Raycast(transform.position + 0.025f * Vector3.up + capsuleCollider.radius * Vector3.left, Vector3.down, 0.05f);
         bool rt = Physics.Raycast(transform.position + 0.025f * Vector3.up + capsuleCollider.radius * Vector3.right, Vector3.down, 0.05f);
         bool fd = Physics.Raycast(transform.position + 0.025f * Vector3.up + capsuleCollider.radius * Vector3.forward, Vector3.down, 0.05f);
         bool bk = Physics.Raycast(transform.position + 0.025f * Vector3.up + capsuleCollider.radius * Vector3.back, Vector3.down, 0.05f);
 
-        playerManager.isGrounded = middle || lt || rt || fd || bk;
+        playerManager.isGrounded = m || lt || rt || fd || bk;
     }
 
     private void HandlePlayerJump()
     {
         CheckGrounded();
 
-        if (Input.GetKeyDown(KeyCode.Space) && playerManager.isGrounded)
-        {
-            rigidBody.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
-            playerManager.isGrounded = false;
-            playerManager.isJumping = true;
-        }
-
-        if (rigidBody.velocity.y < playerFallYVelocityThreshold)
+        if (RigidBody.velocity.y < playerFallYVelocityThreshold)
         {
             playerManager.isFalling = true;
         }
@@ -88,5 +83,16 @@ public class PlayerMovement : MonoBehaviour
             playerManager.isJumping = false;
             playerManager.isFalling = false;
         }
+
+        if (playerManager.isDying) return;
+
+        if (Input.GetKeyDown(KeyCode.Space) && playerManager.isGrounded)
+        {
+            RigidBody.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
+            PlayerAnimationController.Instance.PlayAnimationSmoothly("Jump", 0.25f);
+            playerManager.isGrounded = false;
+            playerManager.isJumping = true;
+        }
+
     }
 }

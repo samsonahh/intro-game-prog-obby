@@ -33,8 +33,8 @@ public class PlayerAnimationController : MonoBehaviour
         animator.SetBool("isFalling", playerManager.isFalling);
     }
 
-    public void PlayDieAnimation()
+    public void PlayAnimationSmoothly(string animName, float transitionDuration)
     {
-        animator.Play("Die");
+        animator.CrossFade(animName, transitionDuration);
     }
 }
